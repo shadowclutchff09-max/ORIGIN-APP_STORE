@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Origin - Free Fire & APK Marketplace</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f8fafc">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-content">
+      <h1 class="splash-title">Origin</h1>
+      <p class="splash-sub">Secure APP Marketplace</p>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <header class="top-bar">
+      <div class="logo-section" id="secretLogoTrigger">
+        <span class="brand-title">Origin</span>
+      </div>
+      <div class="header-actions">
+        <div class="user-avatar" id="headerAvatarBtn">U</div>
+      </div>
+    </header>
+
+    <div id="broadcastBannerContainer"></div>
+
+    <div class="search-box">
+      <i class="ph ph-magnifying-glass search-icon"></i>
+      <input type="text" id="searchInput" placeholder="Search apps, games, packages...">
+    </div>
+
+    <div class="filter-row">
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">Discover Apps</div>
+      <select id="sortSelect" class="sort-select">
+        <option value="popular">🔥 Most Downloaded</option>
+        <option value="newest">✨ Newest Releases</option>
+        <option value="rating">⭐ Highest Rated</option>
+      </select>
+    </div>
+
+    <div class="category-scroll" id="categoryContainer">
+      <div class="chip active" data-category="All"><i class="ph ph-squares-four"></i> All</div>
+      <div class="chip" data-category="Games"><i class="ph ph-game-controller"></i> Games</div>
+      <div class="chip" data-category="Tools"><i class="ph ph-wrench"></i> Tools</div>
+      <div class="chip" data-category="Productivity"><i class="ph ph-chart-line-up"></i> Productivity</div>
+      <div class="chip" data-category="Personalization"><i class="ph ph-sparkle"></i> Personalization</div>
+    </div>
+
+    <section>
+      <div class="app-list" id="publicAppList"></div>
+    </section>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active" id="navHome">
+      <i class="ph-fill ph-house"></i>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" id="navProfile">
+      <i class="ph ph-user"></i>
+      <span>Profile & Hub</span>
+    </div>
+  </nav>
+
+  <!-- Profile Modal -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>Account & Developer Hub</h2>
+        <button class="close-btn" id="closeProfileBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Manage your Origin profile and submissions</div>
+
+      <div class="profile-card">
+        <div class="user-avatar-large" id="profileModalAvatar">U</div>
+        <div>
+          <h4 id="profileModalName">Guest User</h4>
+          <p id="profileModalEmail" style="font-size: 11px; color: var(--text-muted);">Not signed in</p>
+        </div>
+      </div>
+
+      <div class="profile-menu">
+        <div class="menu-option" id="triggerUploadBtn">
+          <div class="menu-icon-box"><i class="ph ph-cloud-arrow-up"></i></div>
+          <div class="menu-text">
+            <h4>Upload App or Game</h4>
+            <p>Publish your developer build with logo & screenshots</p>
+          </div>
+          <i class="ph ph-caret-right" style="color: var(--text-muted);"></i>
+        </div>
+
+        <div class="menu-option" id="triggerAnalyticsBtn">
+          <div class="menu-icon-box"><i class="ph ph-chart-line-up"></i></div>
+          <div class="menu-text">
+            <h4>Developer Analytics & Update</h4>
+            <p>Track performance or update published apps</p>
+          </div>
+          <i class="ph ph-caret-right" style="color: var(--text-muted);"></i>
+        </div>
+
+        <div class="menu-option" id="authMenuOption">
+          <div class="menu-icon-box"><i class="ph ph-sign-in"></i></div>
+          <div class="menu-text">
+            <h4 id="authMenuTitle">Sign In / Sign Up</h4>
+            <p id="authMenuSub">Access your developer account</p>
+          </div>
+          <i class="ph ph-caret-right" style="color: var(--text-muted);"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>Upload Developer Build</h2>
+        <button class="close-btn" id="closeUploadBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Submit your build (.aab or .zip) with logo & screenshots</div>
+
+      <form class="upload-form" id="appUploadForm">
+        <div class="input-group">
+          <label>App Name</label>
+          <input type="text" id="appName" placeholder="e.g. Free Fire Macro" required>
+        </div>
+        <div class="input-group">
+          <label>Package Name</label>
+          <input type="text" id="packageName" placeholder="e.g. com.origin.macro" required>
+        </div>
+        <div class="input-group">
+          <label>Version Name</label>
+          <input type="text" id="appVersion" placeholder="e.g. 1.0.1" required>
+        </div>
+        <div class="input-group">
+          <label>Category</label>
+          <select id="appCategory">
+            <option value="Games">Games</option>
+            <option value="Tools">Tools</option>
+            <option value="Productivity">Productivity</option>
+            <option value="Personalization">Personalization</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Description</label>
+          <textarea id="appDesc" rows="3" placeholder="Brief description..." required></textarea>
+        </div>
+        
+        <div class="input-group">
+          <label>App Logo (Icon Image)</label>
+          <input type="file" id="appLogoFile" accept="image/*" required>
+        </div>
+
+        <div class="input-group">
+          <label>Select App Screenshots (Up to 3 images)</label>
+          <input type="file" id="appScreenshots" accept="image/*" multiple>
+        </div>
+
+        <div class="input-group">
+          <label>Select Developer Build (.aab / .zip)</label>
+          <div class="file-upload-box">
+            <i class="ph ph-file-arrow-up" style="font-size: 28px; color: var(--accent-magenta);"></i>
+            <span id="fileNameDisplay" style="font-size: 12px; color: var(--text-muted);">Select Build File (.aab/.zip)</span>
+            <input type="file" id="apkFile" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 10px;">Submit to AI Queue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Update App Modal -->
+  <div class="modal-overlay" id="updateModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>Update Published App</h2>
+        <button class="close-btn" id="closeUpdateBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Modify your app details or upload a new build version</div>
+
+      <form class="upload-form" id="appUpdateForm">
+        <input type="hidden" id="updateAppFirebaseId">
+        <div class="input-group">
+          <label>App Name</label>
+          <input type="text" id="updateAppName" required>
+        </div>
+        <div class="input-group">
+          <label>New Version Name</label>
+          <input type="text" id="updateAppVersion" placeholder="e.g. 1.0.2" required>
+        </div>
+        <div class="input-group">
+          <label>Description</label>
+          <textarea id="updateAppDesc" rows="3" required></textarea>
+        </div>
+        <div class="input-group">
+          <label>New Developer Build (.aab / .zip - Optional)</label>
+          <input type="file" id="updateApkFile">
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 10px;">Save Changes & Update</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Passcode Modal -->
+  <div class="modal-overlay" id="adminPassModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>🔐 Admin Security Gateway</h2>
+        <button class="close-btn" id="closeAdminPassModal">&times;</button>
+      </div>
+      <div class="modal-sub">Enter secure admin passcode to access moderation hub</div>
+      <form class="upload-form" id="adminPassForm">
+        <div class="input-group">
+          <label>Admin Passcode</label>
+          <input type="password" id="secretPassInput" placeholder="Enter admin passcode" required>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 10px;">Verify & Unlock Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Control Dashboard Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="bottom-sheet-modal" style="max-height: 90vh;">
+      <div class="modal-header">
+        <h2>🛡️ Admin Moderation Hub</h2>
+        <button class="close-btn" id="closeAdminBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Review pending submissions and inspect malware safety</div>
+      <div class="admin-stats-card" style="display:flex; gap:10px; margin-bottom:12px;">
+        <div class="stat-box" style="flex:1; background:#f8fafc; padding:10px; border-radius:10px; text-align:center;"><span id="statPending" style="font-weight:800;">0</span><br><small>Pending</small></div>
+        <div class="stat-box" style="flex:1; background:#f8fafc; padding:10px; border-radius:10px; text-align:center;"><span id="statLive" style="font-weight:800;">0</span><br><small>Live</small></div>
+        <div class="stat-box" style="flex:1; background:#f8fafc; padding:10px; border-radius:10px; text-align:center;"><span id="statDownloads" style="font-weight:800;">0</span><br><small>Downloads</small></div>
+      </div>
+      <h3 style="font-size: 14px; margin-bottom: 8px;">⏳ Pending AI Inspection Queue</h3>
+      <div id="adminPendingList" style="margin-bottom: 16px;"></div>
+      <h3 style="font-size: 14px; margin-bottom: 8px;">⚡ Live Store Apps</h3>
+      <div id="adminLiveList"></div>
+    </div>
+  </div>
+
+  <!-- Developer Analytics Modal -->
+  <div class="modal-overlay" id="analyticsModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>📊 Developer Analytics & Update</h2>
+        <button class="close-btn" id="closeAnalyticsBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Monitor and update your published apps</div>
+      <div id="developerAnalyticsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Developer Public Profile Modal -->
+  <div class="modal-overlay" id="developerProfileModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2 id="devModalTitle">Developer Profile</h2>
+        <button class="close-btn" id="closeDevModalBtn">&times;</button>
+      </div>
+      <div id="devModalEmail" style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;"></div>
+      <h3 style="font-size: 14px; margin-bottom: 8px;">Apps published by this developer:</h3>
+      <div id="devAppsList" style="display:flex; flex-direction:column; gap:10px; max-height:300px; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- App Details Modal -->
+  <div class="modal-overlay" id="appDetailModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2 id="modalDetailTitle">App Details</h2>
+        <button class="close-btn" id="closeAppDetailBtn">&times;</button>
+      </div>
+      <div id="modalDetailMeta" style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;"></div>
+      <div id="modalDevProfileLink" style="font-size: 12px; font-weight:700; color: var(--primary-purple); cursor: pointer; margin-bottom: 10px;"></div>
+      
+      <div class="screenshot-slider" id="modalScreenshotSlider"></div>
+      <div id="modalDetailDesc" style="font-size: 13px; color: var(--text-main); margin-bottom: 12px; line-height: 1.4;"></div>
+      
+      <a href="#" id="modalDetailDownload" class="btn-download" style="display: block; margin-bottom: 4px;">Get Build</a>
+      <div class="download-progress-container" id="downloadProgressContainer">
+        <div class="download-progress-bar" id="downloadProgressBar"></div>
+      </div>
+      <div id="downloadStatusText" style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 16px;"></div>
+
+      <h3 style="font-size: 14px; margin-bottom: 8px;">⭐ User Reviews & Ratings</h3>
+      <div id="modalReviewList" style="max-height: 120px; overflow-y: auto; margin-bottom: 12px;"></div>
+
+      <div class="input-group" style="margin-bottom: 8px;">
+        <label>Rating</label>
+        <select id="reviewRatingInput">
+          <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+          <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+          <option value="3">⭐⭐⭐ (3 Stars)</option>
+          <option value="2">⭐⭐ (2 Stars)</option>
+          <option value="1">⭐ (1 Star)</option>
+        </select>
+      </div>
+      <div class="input-group" style="margin-bottom: 12px;">
+        <label>Write Review</label>
+        <input type="text" id="reviewCommentInput" placeholder="Write feedback...">
+      </div>
+      <button type="button" class="btn-primary" id="submitReviewBtn">Post Review</button>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="authModal">
+    <div class="bottom-sheet-modal">
+      <div class="modal-header">
+        <h2>Sign In to Origin</h2>
+        <button class="close-btn" id="closeAuthBtn">&times;</button>
+      </div>
+      <div class="modal-sub">Access your developer account hub.</div>
+      <form class="upload-form" id="authForm">
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="email" id="authEmail" placeholder="e.g. user@gmail.com" required>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="authPassword" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 10px;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Files Links -->
+  <script type="module" src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
